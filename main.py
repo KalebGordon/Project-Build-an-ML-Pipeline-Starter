@@ -15,16 +15,13 @@ _steps = [
     "data_check",
     "data_split",
     "train_random_forest",
-    # NOTE: We do not include this in the steps so it is not run by mistake.
-    # You first need to promote a model export to "prod" before you can run this,
-    # then you need to run this step explicitly
-#    "test_regression_model"
+    "test_regression_model"
 ]
 
 logger = logging.getLogger(__name__)
 
 # This automatically reads in the configuration
-@hydra.main(config_name='config')
+@hydra.main(config_name="config", version_base="1.1", config_path=".")
 def go(config: DictConfig):
 
     # Setup the wandb experiment. All runs will be grouped under this name
