@@ -39,18 +39,17 @@ def go(config: DictConfig):
 
         if "download" in active_steps:
             logger.info("Starting the download step.")
-            _ = mlflow.run(
-                f"{config['main']['components_repository']}/get_data",
-                "main",
-                version='main',
-                env_manager="conda",
-                parameters={
-                    "sample": config["etl"]["sample"],
-                    "artifact_name": "sample.csv",
-                    "artifact_type": "raw_data",
-                    "artifact_description": "Raw file as downloaded"
-                },
-            )
+            sample = config["etl"]["sample"]
+            command = [
+                "python", "components/get_data/manual.py",
+                "--sample", sample,
+                "--artifact_name", "sample.csv",
+                "--artifact_type", "raw_data",
+                "--artifact_description", "Raw file as downloaded"
+            ]
+
+            # Run the command using subprocess
+            subprocess.run(command, check=True)
     
         if "basic_cleaning" in active_steps:
             logger.info("Starting the basic cleaning step.")
