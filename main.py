@@ -7,6 +7,7 @@ import wandb
 import hydra
 from omegaconf import DictConfig
 import logging
+import subprocess
 
 _steps = [
     "download",
