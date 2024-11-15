@@ -1,4 +1,5 @@
 wandb: [https://wandb.ai/gordon-1104/nyc_airbnb?nw=nwusergordon1104](https://wandb.ai/gordon-1104/nyc_airbnb?nw=nwusergordon1104)
+github repo: [https://github.com/KalebGordon/Project-Build-an-ML-Pipeline-Starter/tree/main](https://github.com/KalebGordon/Project-Build-an-ML-Pipeline-Starter/tree/main)
 
 # Build an ML Pipeline for Short-Term Rental Prices in NYC
 You are working for a property management company renting rooms and properties for short periods of 
