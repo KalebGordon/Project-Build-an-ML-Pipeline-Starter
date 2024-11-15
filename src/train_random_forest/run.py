@@ -40,7 +40,7 @@ logger = logging.getLogger()
 
 def go(args):
 
-    run = wandb.init(job_type="train_random_forest")
+    run = wandb.init(project="nyc_airbnb", job_type="train_random_forest")
     run.config.update(args)
 
     # Get the Random Forest configuration and update W&B
@@ -54,8 +54,14 @@ def go(args):
     # Use run.use_artifact(...).file() to get the train and validation artifact
     # and save the returned path in train_local_pat
     trainval_local_path = run.use_artifact(args.trainval_artifact).file()
-   
-    X = pd.read_csv(trainval_local_path)
+
+    df = pd.read_csv(trainval_local_path)
+
+    print("NA sum", df.isna().sum())
+
+    df = df.dropna()
+    
+    X = df
     y = X.pop("price")  # this removes the column "price" from X and puts it into y
 
     logger.info(f"Minimum price: {y.min()}, Maximum price: {y.max()}")
@@ -63,6 +69,7 @@ def go(args):
     X_train, X_val, y_train, y_val = train_test_split(
         X, y, test_size=args.val_size, stratify=X[args.stratify_by], random_state=args.random_seed
     )
+
 
     logger.info("Preparing sklearn pipeline")
 
@@ -96,7 +103,6 @@ def go(args):
         signature=signature,
         input_example=X_train.iloc[:5]
     )
-
 
     # Upload the model we just exported to W&B
     artifact = wandb.Artifact(

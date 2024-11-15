@@ -90,14 +90,12 @@ def go(config: DictConfig):
                 f"{config['main']['components_repository']}/train_val_test_split",
                 'main',
                 parameters = {
-                    "input_artifact": "clean_sample.csv:latest", 
-                    "artifact_root": "train_val_test_split",  
-                    "test_size": config["data_split"]["test_size"], 
-                    "val_size": config["data_split"]["val_size"],  
-                    "random_seed": config["data_split"]["random_seed"]  
+                    "input": "clean_sample.csv:latest", 
+                    "test_size": config["modeling"]["test_size"], 
+                    "random_seed": config["modeling"]["random_seed"],
+                    "stratify_by": config["modeling"]["stratify_by"]
                 }
             )
-        )
         
         if "train_random_forest" in active_steps:
             rf_config = os.path.abspath("rf_config.json")
@@ -119,13 +117,14 @@ def go(config: DictConfig):
             )
 
         if "test_regression_model" in active_steps:
-
-            ##################
-            # Implement here #
-            ##################
-
-            pass
-
+            _ = mlflow.run(
+                f"{config['main']['components_repository']}/test_regression_model",
+                'main',
+                parameters={
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest",
+                },
+            )
 
 if __name__ == "__main__":
     go()

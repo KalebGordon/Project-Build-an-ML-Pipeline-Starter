@@ -18,7 +18,7 @@ logger = logging.getLogger()
 
 def go(args):
 
-    run = wandb.init(job_type="test_model")
+    run = wandb.init(project="nyc_airbnb", job_type="test_model")
     run.config.update(args)
 
     logger.info("Downloading artifacts")
@@ -30,7 +30,10 @@ def go(args):
     test_dataset_path = run.use_artifact(args.test_dataset).file()
 
     # Read test dataset
-    X_test = pd.read_csv(test_dataset_path)
+    df = pd.read_csv(test_dataset_path)
+    df = df.dropna()
+    
+    X_test = df
     y_test = X_test.pop("price")
 
     logger.info("Loading model and performing inference on test set")
